@@ -59,7 +59,19 @@
 (dolist (package my-packages)
   (unless (package-installed-p package)
     (package-install package)))
-    
+
+
+(require 'fill-columni-ndicator)
+
+;; Fill Column Indicator for Go Mode
+(defun go-mode-fci ()
+  (setq fci-rule-width 1)
+  (setq fci-rule-color "red")
+  (setq fci-rule-column 80)
+  (setq show-trailing-whitespace t))
+
+
+
 ;;Custom Compile Command
 (defun go-mode-setup ()
   ; Customize compile command to run go build
@@ -75,7 +87,10 @@
   (local-set-key (kbd "C-c i") 'go-goto-imports)
   (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
   (define-key go-mode-map (kbd "C-c t") #'go-add-tags)
-  (auto-complete-mode 1))
+  (auto-complete-mode 1)
+  ;; FCI mode
+  (go-mode-fci)
+  )
 (add-hook 'go-mode-hook 'go-mode-setup)
 
 
@@ -111,4 +126,5 @@
 
 ;; (define-key go-mode-map (kbd "C-c C-j") 'go-direx-pop-to-buffer)
 
-(linum-mode 1)
+(setq global-linum-mode t)
+(setq show-paren-mode t)
