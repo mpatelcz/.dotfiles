@@ -116,5 +116,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=$PATH:/home/mpatelcz/golang/bin
+export PATH=$PATH:/home/mpatelcz/golang/bin:/home/mpatelcz/.local/bin
 alias dotfiles='/usr/bin/git --git-dir=/home/mpatelcz/.dotfiles/ --work-tree=/home/mpatelcz'

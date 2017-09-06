@@ -5,7 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
- '(custom-enabled-themes (quote (misterioso))))
+ '(custom-enabled-themes (quote (misterioso)))
+ '(package-selected-packages
+   (quote
+    (yaml-mode elpy window-number vagrant smooth-scroll py-autopep8 project-explorer markdown-mode magit-stgit magit-gh-pulls magit-find-file magit-filenotify magit-annex helm-go-package helm go-stacktracer go-snippets go-scratch go-rename go-playground go-impl go-guru go-gopath go-errcheck go-eldoc go-direx go-complete go-autocomplete go-add-tags fill-column-indicator docker-compose-mode docker buffer-move bash-completion))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -61,7 +64,7 @@
     (package-install package)))
 
 
-(require 'fill-columni-ndicator)
+(require 'fill-column-indicator)
 
 ;; Fill Column Indicator for Go Mode
 (defun go-mode-fci ()
@@ -105,6 +108,7 @@
 (add-to-list 'load-path (concat (getenv "GOPATH")  "/src/github.com/golang/lint/misc/emacs"))
 (require 'golint)
 
+
 ;;Project Explorer
 (require 'project-explorer)
 (global-set-key (kbd "M-e") 'project-explorer-toggle)
@@ -128,3 +132,8 @@
 
 (setq global-linum-mode t)
 (setq show-paren-mode t)
+
+
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+(elpy-enable)
