@@ -118,3 +118,7 @@ fi
 
 export PATH=$PATH:/home/mpatelcz/golang/bin:/home/mpatelcz/.local/bin
 alias dotfiles='/usr/bin/git --git-dir=/home/mpatelcz/.dotfiles/ --work-tree=/home/mpatelcz'
+
+# Workaround against messages like the following:
+# WARNING **: Couldn't connect to accessibility bus: Failed to connect to socket /tmp/dbus-XYZ: Connection refused
+export NO_AT_BRIDGE=1
