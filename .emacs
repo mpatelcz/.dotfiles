@@ -133,7 +133,12 @@
 (setq global-linum-mode t)
 (setq show-paren-mode t)
 
+(require 'linum)
+(linum-mode t)
 
 (require 'py-autopep8)
 (add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
 (elpy-enable)
+
+;; Enabled find-grep as f7
+(global-set-key (kbd "<f7>") 'find-grep)
