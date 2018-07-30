@@ -122,3 +122,14 @@ alias dotfiles='/usr/bin/git --git-dir=/home/mpatelcz/.dotfiles/ --work-tree=/ho
 # Workaround against messages like the following:
 # WARNING **: Couldn't connect to accessibility bus: Failed to connect to socket /tmp/dbus-XYZ: Connection refused
 export NO_AT_BRIDGE=1
+source <(kubectl completion bash)
+
+export TERM=xterm-256color
+
+export LC_ALL=C
+
+if [ -f /usr/local/bin/kubectl ]
+then
+	source <(/usr/local/bin/kubectl completion bash)
+fi
+

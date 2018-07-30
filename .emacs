@@ -6,9 +6,12 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(custom-enabled-themes (quote (misterioso)))
+ '(exec-path
+   (quote
+    ("/home/mpatelcz/bin" "/usr/local/sbin" "/usr/local/bin" "/usr/sbin" "/usr/bin" "/sbin" "/bin" "/usr/games" "/usr/local/games" "/snap/bin" "/home/mpatelcz/golang/bin" "/home/mpatelcz/go/bin" "/home/mpatelcz/bin" "/usr/lib/x86_64-linux-gnu/emacs/25.3/x86_64-linux-gnu" "/home/mpatelcz/.local/bin")))
  '(package-selected-packages
    (quote
-    (yaml-mode elpy window-number vagrant smooth-scroll py-autopep8 project-explorer markdown-mode magit-stgit magit-gh-pulls magit-find-file magit-filenotify magit-annex helm-go-package helm go-stacktracer go-snippets go-scratch go-rename go-playground go-impl go-guru go-gopath go-errcheck go-eldoc go-direx go-complete go-autocomplete go-add-tags fill-column-indicator docker-compose-mode docker buffer-move bash-completion))))
+    (forest-blue-theme lua-mode dockerfile-mode company auto-complete-clang clang-format irony company-rtags flycheck-rtags helm-rtags rtags cmake-font-lock cmake-ide cmake-mode cmake-project ggtags helm-gtags yaml-mode elpy window-number vagrant smooth-scroll py-autopep8 project-explorer markdown-mode magit-stgit magit-gh-pulls magit-find-file magit-filenotify magit-annex helm-go-package helm go-stacktracer go-snippets go-scratch go-rename go-playground go-impl go-guru go-gopath go-errcheck go-eldoc go-direx go-complete go-autocomplete go-add-tags fill-column-indicator docker-compose-mode docker buffer-move bash-completion))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -18,23 +21,18 @@
 ;; Emacs configuratrion
 
 
+(setq inhibit-startup-screen t)
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(setq backup-directory-alist '(("." . ".emacs_backups")))
+
+
 (require 'package)
 (add-to-list
  'package-archives
  '("melpa" . "http://melpa.org/packages/")
  t)
 (package-initialize)
-
-;; Copied from:
-;; http://arenzana.org/2015/Emacs-for-Go/
-;;Load package-install sources
-;; (when (>= emacs-major-version 24)
-;;   (require 'package)
-;;   (add-to-list
-;;    'package-archives
-;;    '("melpa" . "http://melpa.org/packages/")
-;;    t)
-;;   (package-initialize))
 
 (defvar my-packages
   '(;;;; Go shit
@@ -117,8 +115,7 @@
 					; Magit Status
 (global-set-key (kbd "C-x g") 'magit-status)
 
-;;(require 'ido)
-;;(ido-mode t)
+;; Helm is global
 (require 'helm-config)
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
 (global-set-key (kbd "C-x m") 'helm-M-x)
@@ -130,8 +127,9 @@
 
 ;; (define-key go-mode-map (kbd "C-c C-j") 'go-direx-pop-to-buffer)
 
-(setq global-linum-mode t)
-(setq show-paren-mode t)
+
+(global-linum-mode t)
+(show-paren-mode t)
 
 (require 'linum)
 (linum-mode t)
@@ -142,3 +140,56 @@
 
 ;; Enabled find-grep as f7
 (global-set-key (kbd "<f7>") 'find-grep)
+
+
+;; C++ related stuff
+;; (require 'setup-helm-gtags)
+;; (require 'setup-helm)
+
+(require 'ggtags)
+
+(add-hook 'c-mode-common-hook
+	  (lambda ()
+	    (when (derived-mode-p 'c-mode 'c++-mode)
+	      (ggtags-mode 1))))
+
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+ helm-gtags-prefix-key "\C-cg"
+ helm-gtags-suggested-key-mapping t)
+
+(require 'helm-gtags)
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+
+(eval-after-load "helm-gtags"
+  '(progn
+     (define-key helm-gtags-mode-map (kbd "M-t") 'helm-gtags-find-tag)
+          (define-key helm-gtags-mode-map (kbd "M-r") 'helm-gtags-find-rtag)
+          (define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-find-symbol)
+          (define-key helm-gtags-mode-map (kbd "M-g M-p") 'helm-gtags-parse-file)
+          (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+          (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+          (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)))
+
+(define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+(define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+;; C++ mode
+(require 'rtags)
+(cmake-ide-setup)
+
+;;(if (display-graphic-p) () ())
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(require 'whitespace)
+(setq whitespace-style '(face empty tabs lines-tail trailing))
+(setq require-final-newline t)
